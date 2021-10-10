@@ -9,7 +9,7 @@ namespace Managers
         #region Inspector Fields
         [SerializeField] private RawImage m_imageRef;
         [SerializeField] private Vector2Int m_imageSize;
-
+        [SerializeField] private int m_playerSpeed = 1;
         [Header("Noise Data")] 
         [SerializeField] private NoiseData[] m_noiseData;
         #endregion Inspector Fields
@@ -31,26 +31,28 @@ namespace Managers
             UpdateTextures();
         }
 
-        private void Update()
-        {
-            MoveMap();
-            UpdateTextures();
-        }
-
         private void MoveMap()
         {
             Vector2Int offset = new Vector2Int(0, 0);
             if (Input.GetKey(KeyCode.W))
-                offset += new Vector2Int(0, 1);
+                offset += new Vector2Int(0, m_playerSpeed);
             if (Input.GetKey(KeyCode.A))
-                offset += new Vector2Int(-1, 0);
+                offset += new Vector2Int(-m_playerSpeed, 0);
             if (Input.GetKey(KeyCode.S))
-                offset += new Vector2Int(0, -1);
+                offset += new Vector2Int(0, -m_playerSpeed);
             if (Input.GetKey(KeyCode.D))
-                offset += new Vector2Int(1, 0);
+                offset += new Vector2Int(m_playerSpeed, 0);
             m_position += offset;
         }
 
+        private void OnValidate()
+        {
+            if (!m_texture)
+                return;
+            UpdateTextures();
+        }
+
+        [ContextMenu("Generate Texture")]
         private void UpdateTextures()
         {
             for (int x = 0; x < m_imageSize.x; x++)
@@ -60,11 +62,23 @@ namespace Managers
                     float p = 0;
                     foreach (var noiseData in m_noiseData)
                     {
-                        noiseData.SetNoise();
-                        p += noiseData.noise.GetSimplexFractal(x + m_position.x, y + m_position.y);
+                        if (noiseData.active)
+                        {
+                            noiseData.SetNoise();
+                            float noise = (noiseData.noise.GetSimplexFractal(x + m_position.x, y + m_position.y) + 1) / 2f;
+                            noise *= noiseData.maxHeight;
+                            p += noise;
+                        }
                     }
 
-                    var baseCol = new Color(0.05f, 0.6f, 0.1f) * (p+1);
+                    if (p > 1)
+                        p = 1;
+                    
+                    var baseCol = new Color(0.05f, p, 0.02f);
+                    if (p < 0.15f)
+                        baseCol = new Color(0.05f, 0.02f, p);
+                    if (p > 0.88f)
+                        baseCol = new Color(0.8f*p, 0.8f*p, 0.8f*p);
                     m_texture.SetPixel(x, y, baseCol);
                 }
             }

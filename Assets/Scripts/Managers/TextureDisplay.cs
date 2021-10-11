@@ -60,16 +60,16 @@ namespace Managers
                 for (int y = 0; y < m_imageSize.y; y++)
                 {
                     float p = 0;
-                    foreach (var noiseData in m_noiseData)
-                    {
-                        if (noiseData.active)
-                        {
-                            noiseData.SetNoise();
-                            float noise = (noiseData.noise.GetSimplexFractal(x + m_position.x, y + m_position.y) + 1) / 2f;
-                            noise *= noiseData.maxHeight;
-                            p += noise;
-                        }
-                    }
+
+                    var noiseData = x > m_imageSize.x/2 ? m_noiseData[0] : m_noiseData[1];
+                    // foreach (var noiseData in m_noiseData)
+                    // {
+                        noiseData.SetNoise();
+                        float noise = (noiseData.noise.GetSimplexFractal(x + m_position.x, y + m_position.y) + 1) / 2f;
+                        noise *= noiseData.maxHeight;
+                        p += noise;
+                    // }
+                    
 
                     if (p > 1)
                         p = 1;

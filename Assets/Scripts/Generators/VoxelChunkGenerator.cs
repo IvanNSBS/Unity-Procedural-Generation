@@ -1,44 +1,40 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections.Generic;
-using Data;
 using DefaultNamespace;
+using System.Collections.Generic;
 
 namespace Generators
 {
     public class VoxelChunkGenerator : ProceduralMesh
     {
         #region Constants
-        private const int CHUNK_WIDTH = 64;
+        private const int CHUNK_SIZE = 16;
         private const int CHUNK_HEIGHT = 256;
         #endregion Constantss
      
-        #region Inspector Fields
-        [SerializeField] private NoiseData m_noiseData;
-        #endregion Inspector Fields
-        
         public override void DeleteMesh()
         {
         }
 
-        public override void GenerateMesh(Texture2D heightmap)
+        public override void GenerateMesh(Texture2D heightmap, int chunkX, int chunkY, NoiseData data)
         {
             List<Vector3> allVerts = new List<Vector3>();
             List<int> allIdxs = new List<int>();
             
-            m_noiseData.SetNoise();
+            data.SetNoise();
             
-            for (int x = 0; x < CHUNK_WIDTH; x++)
+            for (int x = 0; x < CHUNK_SIZE; x++)
             {
-                for (int y = 0; y < CHUNK_WIDTH; y++)
+                for (int y = 0; y < CHUNK_SIZE; y++)
                 {
-                    int idx = y * CHUNK_WIDTH + x;
-                    float normalizedNoise = (m_noiseData.noise.GetSimplexFractal(x, y) + 1) / 2f;
-                    int height = (int)Math.Floor(normalizedNoise * CHUNK_HEIGHT);
-                    if(x == 8 && y == 8)
-                        Debug.Log("height: " + normalizedNoise);
+                    int idx = y * CHUNK_SIZE + x;
+                    int actualX = x + chunkX * CHUNK_SIZE;
+                    int actualY = y + chunkY * CHUNK_SIZE;
                     
-                    var tuple = GenerateVoxel(8*idx, x, height, y);
+                    float normalizedNoise = (data.noise.GetSimplexFractal(actualX, actualY) + 1) / 2f;
+                    int height = (int)Math.Floor(normalizedNoise * CHUNK_HEIGHT);
+                    
+                    var tuple = GenerateVoxel(8*idx, actualX, height, actualY);
                     
                     allVerts.AddRange(tuple.Item1);
                     allIdxs.AddRange(tuple.Item2);
@@ -54,15 +50,6 @@ namespace Generators
             Debug.Log($"Vertices Size: {vertices.Length}");
             mesh.Optimize();
         }
-
-        [ContextMenu("Generate Mesh")]
-        private void GenMesh() => GenerateMesh(new Texture2D(16, 16));
-         
-        private void Start()
-        {
-            GenMesh();
-        }
-
 
         #region Helper Methods
         private Tuple<Vector3[], int[]> GenerateVoxel(int idx, int posX, int posY, int posZ)

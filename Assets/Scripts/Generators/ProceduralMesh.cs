@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DefaultNamespace;
+using UnityEngine;
 
 namespace Generators
 {
@@ -11,6 +12,6 @@ namespace Generators
         #endregion Fields
         
         public abstract void DeleteMesh();
-        public abstract void GenerateMesh(Texture2D heightmap);
+        public abstract void GenerateMesh(Texture2D heightmap, int chunkX, int chunkY, NoiseData data);
     }
 }

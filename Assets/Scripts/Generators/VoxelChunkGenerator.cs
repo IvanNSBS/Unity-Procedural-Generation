@@ -1,15 +1,21 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Data;
+using DefaultNamespace;
 
 namespace Generators
 {
     public class VoxelChunkGenerator : ProceduralMesh
     {
         #region Constants
-        private const int CHUNK_WIDTH = 16;
+        private const int CHUNK_WIDTH = 64;
         private const int CHUNK_HEIGHT = 256;
         #endregion Constantss
+     
+        #region Inspector Fields
+        [SerializeField] private NoiseData m_noiseData;
+        #endregion Inspector Fields
         
         public override void DeleteMesh()
         {
@@ -20,12 +26,19 @@ namespace Generators
             List<Vector3> allVerts = new List<Vector3>();
             List<int> allIdxs = new List<int>();
             
+            m_noiseData.SetNoise();
+            
             for (int x = 0; x < CHUNK_WIDTH; x++)
             {
                 for (int y = 0; y < CHUNK_WIDTH; y++)
                 {
                     int idx = y * CHUNK_WIDTH + x;
-                    var tuple = GenerateVoxel(8*idx, x, 0, y);
+                    float normalizedNoise = (m_noiseData.noise.GetSimplexFractal(x, y) + 1) / 2f;
+                    int height = (int)Math.Floor(normalizedNoise * CHUNK_HEIGHT);
+                    if(x == 8 && y == 8)
+                        Debug.Log("height: " + normalizedNoise);
+                    
+                    var tuple = GenerateVoxel(8*idx, x, height, y);
                     
                     allVerts.AddRange(tuple.Item1);
                     allIdxs.AddRange(tuple.Item2);
@@ -42,9 +55,12 @@ namespace Generators
             mesh.Optimize();
         }
 
+        [ContextMenu("Generate Mesh")]
+        private void GenMesh() => GenerateMesh(new Texture2D(16, 16));
+         
         private void Start()
         {
-            GenerateMesh(new Texture2D(16, 16));
+            GenMesh();
         }
 
 

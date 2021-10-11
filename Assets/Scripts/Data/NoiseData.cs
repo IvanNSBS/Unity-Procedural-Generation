@@ -2,7 +2,7 @@
 using Libs;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace Data
 {
     [Serializable]
     public class NoiseData

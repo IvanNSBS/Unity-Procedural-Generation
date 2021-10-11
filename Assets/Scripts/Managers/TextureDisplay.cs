@@ -1,4 +1,4 @@
-﻿using DefaultNamespace;
+﻿using Data;
 using UnityEngine;
 using UnityEngine.UI;
 

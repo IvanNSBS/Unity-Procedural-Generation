@@ -1,9 +1,9 @@
-﻿using DefaultNamespace;
+﻿using Data;
 using UnityEngine;
 
 namespace Generators
 {
-    [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public abstract class ProceduralMesh : MonoBehaviour
     {
         #region Fields

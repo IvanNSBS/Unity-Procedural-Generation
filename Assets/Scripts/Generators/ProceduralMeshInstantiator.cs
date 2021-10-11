@@ -1,6 +1,5 @@
-﻿using System;
-using DefaultNamespace;
-using UnityEngine;
+﻿using UnityEngine;
+using Data;
 
 namespace Generators
 {
@@ -8,22 +7,30 @@ namespace Generators
     {
         #region Inspector Fields
         [SerializeField] [Range(4, 16)] private int m_renderDistance = 4;
-        [SerializeField] private ProceduralMesh m_mesh;
-
         [SerializeField] private Vector3 m_playerPosition;
         [SerializeField] private NoiseData m_noiseData;
         #endregion Inspector Fields
 
-
+        #region Fields
+        #endregion Fields
+        
+        
         #region MonoBehaviour Methods
+        private void Update()
+        {
+            if (ShouldUpdateChunks())
+                UpdateVisibleChunks();
+        }
+
         private void Start()
         {
             for (int x = 0; x < m_renderDistance; x++)
             {
                 for (int y = 0; y < m_renderDistance; y++)
                 {
-                    var instance = Instantiate(m_mesh);
-                    instance.GenerateMesh(new Texture2D(1, 1), x, y, m_noiseData);
+                    var instance = new GameObject();
+                    var mesh = instance.AddComponent<VoxelChunkGenerator>();
+                    mesh.GenerateMesh(new Texture2D(1, 1), x, y, m_noiseData);
                 }
             }
         }
@@ -36,7 +43,12 @@ namespace Generators
 
         
         #region Helper Methods
-        private bool CheckShouldRegenerate()
+        private void UpdateVisibleChunks()
+        {
+            
+        }
+        
+        private bool ShouldUpdateChunks()
         {
             return false;
         }

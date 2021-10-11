@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Data;
+using System;
 using UnityEngine;
-using DefaultNamespace;
-using System.Collections.Generic;
 
 namespace Generators
 {

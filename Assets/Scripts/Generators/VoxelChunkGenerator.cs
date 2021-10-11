@@ -34,7 +34,7 @@ namespace Generators
                     float normalizedNoise = (data.noise.GetSimplexFractal(actualX, actualY) + 1) / 2f;
                     int height = (int)Math.Floor(normalizedNoise * CHUNK_HEIGHT);
                     
-                    var tuple = GenerateVoxel(8*idx, actualX, height, actualY);
+                    var tuple = GenerateVoxel(8*idx, x, height, y);
                     
                     allVerts.AddRange(tuple.Item1);
                     allIdxs.AddRange(tuple.Item2);
@@ -47,8 +47,9 @@ namespace Generators
             // // TODO: Use more efficient method here
             mesh.vertices = vertices = allVerts.ToArray();
             mesh.triangles = indices = allIdxs.ToArray();
-            Debug.Log($"Vertices Size: {vertices.Length}");
             mesh.Optimize();
+
+            transform.position = new Vector3(chunkX * CHUNK_SIZE, 0, chunkY * CHUNK_SIZE);
         }
 
         #region Helper Methods

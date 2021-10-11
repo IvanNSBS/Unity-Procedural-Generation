@@ -74,11 +74,11 @@ namespace Managers
                     if (p > 1)
                         p = 1;
                     
-                    var baseCol = new Color(0.05f, p, 0.02f);
+                    var baseCol = new Color(0.05f, p*2, 0.02f);
                     if (p < 0.15f)
-                        baseCol = new Color(0.05f, 0.02f, p);
+                        baseCol = new Color(0.05f, 0.02f, p*2);
                     if (p > 0.88f)
-                        baseCol = new Color(0.8f*p, 0.8f*p, 0.8f*p);
+                        baseCol = new Color(0.8f*p, 0.8f*p, 0.8f*p*2);
                     m_texture.SetPixel(x, y, baseCol);
                 }
             }

@@ -7,9 +7,14 @@ namespace Generators
     public class VoxelChunkGenerator : ProceduralMesh
     {
         #region Constants
-        private const int CHUNK_SIZE = 16;
-        private const int CHUNK_HEIGHT = 256;
+        public const int CHUNK_SIZE = 16;
+        public const int CHUNK_HEIGHT = 256;
         #endregion Constantss
+        
+        #region Fields
+        public int xCoord;
+        public int yCoord;
+        #endregion Fields
      
         public override void DeleteMesh()
         {
@@ -17,9 +22,10 @@ namespace Generators
 
         public override void GenerateMesh(Texture2D heightmap, int chunkX, int chunkY, NoiseData data)
         {
+            xCoord = chunkX;
+            yCoord = chunkY;
             vertices = new Vector3[8*CHUNK_SIZE*CHUNK_SIZE];
             indices = new int[36*CHUNK_SIZE*CHUNK_SIZE];
-            data.SetNoise();
             
             for (int x = 0; x < CHUNK_SIZE; x++)
             {
@@ -44,6 +50,7 @@ namespace Generators
             mesh.vertices = vertices;
             mesh.triangles = indices;
             mesh.Optimize();
+            mesh.RecalculateNormals();
 
             transform.position = new Vector3(chunkX * CHUNK_SIZE, 0, chunkY * CHUNK_SIZE);
         }
@@ -84,6 +91,8 @@ namespace Generators
             for (int i = 0; i < idxs.Length; i++)
                 indices[indicesStride + i] = idxs[i];
         }
+
+        public void SetMaterial(Material mat) => GetComponent<MeshRenderer>().material = mat;
         #endregion Helper Methods
     }
 }

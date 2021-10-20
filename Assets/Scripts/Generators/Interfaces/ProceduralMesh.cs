@@ -1,5 +1,4 @@
-﻿using Data;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Generators.Interfaces
 {
@@ -12,6 +11,6 @@ namespace Generators.Interfaces
         #endregion Fields
         
         public abstract void DeleteMesh();
-        public abstract void GenerateMesh(Texture2D heightmap, int chunkX, int chunkY, NoiseData data);
+        public abstract void GenerateMesh(HeightmapGenerator generator, int chunkX, int chunkY);
     }
 }

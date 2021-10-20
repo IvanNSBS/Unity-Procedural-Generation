@@ -21,7 +21,7 @@ namespace Generators.Voxel
         {
         }
 
-        public override void GenerateMesh(Texture2D heightmap, int chunkX, int chunkY, NoiseData data)
+        public override void GenerateMesh(HeightmapGenerator generator, int chunkX, int chunkY)
         {
             xCoord = chunkX;
             yCoord = chunkY;
@@ -38,8 +38,8 @@ namespace Generators.Voxel
                     int actualX = x + chunkX * CHUNK_SIZE;
                     int actualY = y + chunkY * CHUNK_SIZE;
                     
-                    float normalizedNoise = (data.noise.GetSimplexFractal(actualX, actualY) + 1) / 2f;
-                    int height = (int)Math.Floor(normalizedNoise * CHUNK_HEIGHT);
+                    float noise = generator.GetHeightAt(actualX, actualY);
+                    int height = (int)Math.Floor(noise * CHUNK_HEIGHT);
                     
                     GenerateVoxel(verticesStride, indicesStride, x, height, y);
                 }

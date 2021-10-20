@@ -1,4 +1,5 @@
 ﻿using Data;
+using DataScriptable;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ namespace Utils
         [SerializeField] private RawImage m_imageRef;
         [SerializeField] private Vector2Int m_imageSize;
         [Header("Noise Data")] 
+        [SerializeField] private BiomeMap m_biomeData;
         [SerializeField] private NoiseData[] m_noiseData;
         #endregion Inspector Fields
 

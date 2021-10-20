@@ -1,5 +1,4 @@
-﻿using Data;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 using Generators.Voxel;
 using System.Collections.Generic;
@@ -12,7 +11,9 @@ namespace Generators
         [SerializeField] private Material m_chunkMaterial;
         [SerializeField] [Range(2, 16)] private int m_renderDistance = 4;
         [SerializeField] private Transform m_playerPosition;
-        [SerializeField] private NoiseData m_noiseData;
+
+        [Header("Generator")] 
+        [SerializeField] private HeightmapGenerator m_heightmapGenerator;
         #endregion Inspector Fields
 
         #region Fields
@@ -32,7 +33,6 @@ namespace Generators
             m_chunks = new Dictionary<Vector2Int, VoxelChunkGenerator>();
             m_playerPosition.position = new Vector3(0, m_playerPosition.position.y, 0);
             m_playerCoords = new Vector2Int(0, 0);
-            m_noiseData.SetNoise();
             
             for (int y = -m_renderDistance; y < m_renderDistance; y++)
             {
@@ -60,7 +60,6 @@ namespace Generators
                 }
             }
 
-            int created = 0;
             for (int y = -m_renderDistance; y < m_renderDistance; y++)
             {
                 for (int x = -m_renderDistance; x < m_renderDistance; x++)
@@ -72,8 +71,6 @@ namespace Generators
                         SpawnChunk(x_, y_);
                 }
             }
-            
-            Debug.Log("Created: " + created);
         }
         #endregion Methods
 
@@ -105,7 +102,7 @@ namespace Generators
             
             var mesh = instance.AddComponent<VoxelChunkGenerator>();
             mesh.SetMaterial(m_chunkMaterial);
-            mesh.GenerateMesh(new Texture2D(1, 1), x, y, m_noiseData);
+            mesh.GenerateMesh(m_heightmapGenerator, x, y);
             
             m_chunks.Add(new Vector2Int(x, y), mesh);
             return true;
@@ -126,8 +123,6 @@ namespace Generators
                 Destroy(chunk.Value.gameObject);
             }
             
-            m_noiseData.SetNoise();
-
             for (int y = -m_renderDistance; y < m_renderDistance; y++)
             {
                 for (int x = -m_renderDistance; x < m_renderDistance; x++)

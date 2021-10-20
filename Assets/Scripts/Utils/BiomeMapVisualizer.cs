@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace Utils
 {
+    // TODO: This visualizer should be part of the BiomeMap Scriptable Object
     public class BiomeMapVisualizer : MonoBehaviour
     {
         #region Inspector Fields
@@ -26,7 +27,6 @@ namespace Utils
         
         
         #region Methods
-
         private void UpdateDiagram()
         {
             if (!m_img)

@@ -1,7 +1,7 @@
 ﻿using Data;
 using UnityEngine;
 
-namespace Generators
+namespace Generators.Interfaces
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public abstract class ProceduralMesh : MonoBehaviour

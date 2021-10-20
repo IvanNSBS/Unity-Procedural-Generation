@@ -2,14 +2,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Managers
+namespace Utils
 {
     public class TextureDisplay : MonoBehaviour
     {
         #region Inspector Fields
         [SerializeField] private RawImage m_imageRef;
         [SerializeField] private Vector2Int m_imageSize;
-        [SerializeField] private int m_playerSpeed = 1;
         [Header("Noise Data")] 
         [SerializeField] private NoiseData[] m_noiseData;
         #endregion Inspector Fields
@@ -30,21 +29,7 @@ namespace Managers
             
             UpdateTextures();
         }
-
-        private void MoveMap()
-        {
-            Vector2Int offset = new Vector2Int(0, 0);
-            if (Input.GetKey(KeyCode.W))
-                offset += new Vector2Int(0, m_playerSpeed);
-            if (Input.GetKey(KeyCode.A))
-                offset += new Vector2Int(-m_playerSpeed, 0);
-            if (Input.GetKey(KeyCode.S))
-                offset += new Vector2Int(0, -m_playerSpeed);
-            if (Input.GetKey(KeyCode.D))
-                offset += new Vector2Int(m_playerSpeed, 0);
-            m_position += offset;
-        }
-
+        
         private void OnValidate()
         {
             if (!m_texture)

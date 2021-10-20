@@ -1,5 +1,7 @@
 ﻿using System;
 using Data;
+using DataScriptable;
+using Generators.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,8 +42,11 @@ namespace Utils
                     float nTemperature = x /(float)size;
                     float nMoisture = y /(float)size;
                     
-                    var biome = m_biomeMap.Evaluate(nTemperature, nMoisture);
-                    m_texture.SetPixel(x, y, biome.Color);
+                    var biome = BiomeSelector.Evaluate(m_biomeMap, nTemperature, nMoisture);
+                    if(biome != null)
+                        m_texture.SetPixel(x, y, biome.Color);
+                    else
+                        m_texture.SetPixel(x, y, Color.black);
                 }
             }
             

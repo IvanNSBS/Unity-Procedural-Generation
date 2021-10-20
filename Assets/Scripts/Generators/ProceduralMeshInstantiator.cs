@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Data;
+﻿using Data;
 using UnityEngine;
+using System.Linq;
+using Generators.Voxel;
+using System.Collections.Generic;
 
 namespace Generators
 {

@@ -1,8 +1,9 @@
 ﻿using Data;
 using System;
 using UnityEngine;
+using Generators.Interfaces;
 
-namespace Generators
+namespace Generators.Voxel
 {
     public class VoxelChunkGenerator : ProceduralMesh
     {
